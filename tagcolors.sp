@@ -64,7 +64,7 @@ public DIDMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		int g_color = StringToInt(info);
 		
 		if(g_color == 0) CCC_ResetColor(client, CCC_TagColor);
-		else CCC_SetColor(client, CCC_TagColor, g_sprays[g_color][color], false);
+		else CCC_SetColorString(client, CCC_TagColor, g_sprays[g_color][color]);
 		
 		PrintToChat(client, " \x01You have choosen\x03 %s \x01as your tag color!",g_sprays[g_color][Nombre]);
 	}
@@ -103,7 +103,7 @@ public DIDMenuHandler1(Handle:menu, MenuAction:action, client, itemNum)
 		int g_color = StringToInt(info);
 		
 		if(g_color == 0) CCC_ResetColor(client, CCC_ChatColor);
-		else CCC_SetColor(client, CCC_ChatColor, g_sprays[g_color][color], false);
+		else CCC_SetColorString(client, CCC_ChatColor, g_sprays[g_color][color]);
 		
 		PrintToChat(client, " \x01You have choosen\x03 %s \x01as your chat color!",g_sprays[g_color][Nombre]);
 	}
