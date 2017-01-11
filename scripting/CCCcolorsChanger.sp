@@ -21,7 +21,7 @@ new g_sprayCount = 0;
 
 public Plugin:myinfo =
 {
-	name = "SM CCC Colors Changer",
+	name = "SM Tag Colors",
 	author = "Franc1sco franug",
 	description = "",
 	version = PLUGIN,
