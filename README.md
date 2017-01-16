@@ -1,4 +1,4 @@
-# Required: https://github.com/Franc1sco/Custom-Chat-Colors-CSGO
+# Required: https://www.dropbox.com/s/pd1vhxq5ip26x5u/Custom-Chat-Colors-CSGO%20and%20scp.zip?dl=0
 
 
 # Commands
