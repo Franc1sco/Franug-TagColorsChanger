@@ -5,7 +5,7 @@
 #include <ccc>
 #include <clientprefs>
 
-#define PLUGIN "1.1"
+#define PLUGIN "1.2"
 
 #define MAX_SPRAYS 60
 
@@ -19,7 +19,8 @@ new String:colors[3][MAXPLAYERS+1][64];
 enum Listado
 {
 	String:Nombre[32],
-	String:color[32]
+	String:color[32],
+	String:flag[32]
 }
 
 new g_sprays[MAX_SPRAYS][Listado];
@@ -125,7 +126,10 @@ public Action:colors3(client, args)
 	AddMenuItem(menu, "0", "Default color");
 	for (new i=1; i<g_sprayCount; ++i) {
 		Format(item, 4, "%i", i);
-		AddMenuItem(menu, item, g_sprays[i][Nombre]);
+		if(HasFlags(client, g_sprays[g_sprayCount][flag]))
+			AddMenuItem(menu, item, g_sprays[i][Nombre]);
+		else
+			AddMenuItem(menu, item, g_sprays[i][Nombre], ITEMDRAW_DISABLED);
 	}
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, 0);
@@ -172,7 +176,10 @@ public Action:colors1(client, args)
 	AddMenuItem(menu, "0", "Default color");
 	for (new i=1; i<g_sprayCount; ++i) {
 		Format(item, 4, "%i", i);
-		AddMenuItem(menu, item, g_sprays[i][Nombre]);
+		if(HasFlags(client, g_sprays[g_sprayCount][flag]))
+			AddMenuItem(menu, item, g_sprays[i][Nombre]);
+		else
+			AddMenuItem(menu, item, g_sprays[i][Nombre], ITEMDRAW_DISABLED);
 	}
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, 0);
@@ -218,7 +225,10 @@ public Action:colors2(client, args)
 	AddMenuItem(menu, "0", "Default color");
 	for (new i=1; i<g_sprayCount; ++i) {
 		Format(item, 4, "%i", i);
-		AddMenuItem(menu, item, g_sprays[i][Nombre]);
+		if(HasFlags(client, g_sprays[g_sprayCount][flag]))
+			AddMenuItem(menu, item, g_sprays[i][Nombre]);
+		else
+			AddMenuItem(menu, item, g_sprays[i][Nombre], ITEMDRAW_DISABLED);
 	}
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, 0);
@@ -276,6 +286,8 @@ ReadDecals() {
 
 		KvGetString(kv, "color", g_sprays[g_sprayCount][color], 32);
 		
+		KvGetString(kv, "flag", g_sprays[g_sprayCount][flag], 32, "public");
+		
 		g_sprayCount++;
 	} while (KvGotoNextKey(kv));
 	CloseHandle(kv);
@@ -285,3 +297,33 @@ ReadDecals() {
 		g_sprays[i][color] = 0;
 	}
 }
+
+stock bool:HasFlags(client, const String:flagString[])
+{
+	if(StrEqual(flagString, "public")) return true;
+	
+	new AdminId:admin = GetUserAdmin(client);
+	if (admin != INVALID_ADMIN_ID)
+	{
+        new count, found, flags = ReadFlagString(flagString);
+        for (new i = 0; i <= 20; i++)
+        {
+            if (flags & (1<<i))
+            {
+                count++;
+
+                if (GetAdminFlag(admin, AdminFlag:i))
+                {
+                    found++;
+                }
+            }
+        }
+
+        if (count == found)
+        {
+            return true;
+        }
+	}
+
+	return false;
+}  
