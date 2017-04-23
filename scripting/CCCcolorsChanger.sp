@@ -24,7 +24,7 @@
 #include <ccc>
 #include <clientprefs>
 
-#define PLUGIN "1.2"
+#define PLUGIN "1.2.1"
 
 #define MAX_SPRAYS 60
 
@@ -145,7 +145,7 @@ public Action:colors3(client, args)
 	AddMenuItem(menu, "0", "Default color");
 	for (new i=1; i<g_sprayCount; ++i) {
 		Format(item, 4, "%i", i);
-		if(HasFlags(client, g_sprays[g_sprayCount][flag]))
+		if(HasFlag(client, g_sprays[g_sprayCount][flag]))
 			AddMenuItem(menu, item, g_sprays[i][Nombre]);
 		else
 			AddMenuItem(menu, item, g_sprays[i][Nombre], ITEMDRAW_DISABLED);
@@ -195,7 +195,7 @@ public Action:colors1(client, args)
 	AddMenuItem(menu, "0", "Default color");
 	for (new i=1; i<g_sprayCount; ++i) {
 		Format(item, 4, "%i", i);
-		if(HasFlags(client, g_sprays[g_sprayCount][flag]))
+		if(HasFlag(client, g_sprays[g_sprayCount][flag]))
 			AddMenuItem(menu, item, g_sprays[i][Nombre]);
 		else
 			AddMenuItem(menu, item, g_sprays[i][Nombre], ITEMDRAW_DISABLED);
@@ -244,7 +244,7 @@ public Action:colors2(client, args)
 	AddMenuItem(menu, "0", "Default color");
 	for (new i=1; i<g_sprayCount; ++i) {
 		Format(item, 4, "%i", i);
-		if(HasFlags(client, g_sprays[g_sprayCount][flag]))
+		if(HasFlag(client, g_sprays[g_sprayCount][flag]))
 			AddMenuItem(menu, item, g_sprays[i][Nombre]);
 		else
 			AddMenuItem(menu, item, g_sprays[i][Nombre], ITEMDRAW_DISABLED);
@@ -317,31 +317,20 @@ ReadDecals() {
 	}
 }
 
-stock bool:HasFlags(client, const String:flagString[])
+bool:HasFlag(client, String:flags[])
 {
-	if(StrEqual(flagString, "public")) return true;
+	if(StrEqual(flags, "public")) return true;
 	
-	new AdminId:admin = GetUserAdmin(client);
-	if (admin != INVALID_ADMIN_ID)
+	if (GetUserFlagBits(client) & ADMFLAG_ROOT)
 	{
-        new count, found, flags = ReadFlagString(flagString);
-        for (new i = 0; i <= 20; i++)
-        {
-            if (flags & (1<<i))
-            {
-                count++;
+		return true;
+	}
 
-                if (GetAdminFlag(admin, AdminFlag:i))
-                {
-                    found++;
-                }
-            }
-        }
+	new iFlags = ReadFlagString(flags);
 
-        if (count == found)
-        {
-            return true;
-        }
+	if ((GetUserFlagBits(client) & iFlags) == iFlags)
+	{
+		return true;
 	}
 
 	return false;
