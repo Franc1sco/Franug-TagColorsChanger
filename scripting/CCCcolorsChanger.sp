@@ -24,7 +24,7 @@
 #include <ccc>
 #include <clientprefs>
 
-#define PLUGIN "1.2.1"
+#define PLUGIN "1.2.2"
 
 #define MAX_SPRAYS 60
 
@@ -78,18 +78,22 @@ public OnClientCookiesCached(client)
 	
 	if(strlen(colors[0][client]) > 1 || strlen(colors[1][client]) > 1 || strlen(colors[2][client]) > 1)
 	{
-		CreateTimer(5.0, Timer_Advertise,GetClientUserId(client));
+		CreateTimer(5.0, Timer_Advertise,client);
 	}
 }
 
-public Action:Timer_Advertise(Handle:timer, any:userid)
+public Action:Timer_Advertise(Handle:timer, any:client)
 {
-	int client = GetClientOfUserId(userid);
-	if (client == 0 || !IsClientInGame(client))return;
-	
-	if(strlen(colors[0][client]) > 1) CCC_SetColorString(client, CCC_TagColor, colors[0][client]);
-	if(strlen(colors[1][client]) > 1) CCC_SetColorString(client, CCC_ChatColor, colors[1][client]);
-	if(strlen(colors[2][client]) > 1) CCC_SetColorString(client, CCC_NameColor, colors[2][client]);
+	if (IsClientInGame(client))
+	{
+		if(strlen(colors[0][client]) > 1) CCC_SetColorString(client, CCC_TagColor, colors[0][client]);
+		if(strlen(colors[1][client]) > 1) CCC_SetColorString(client, CCC_ChatColor, colors[1][client]);
+		if(strlen(colors[2][client]) > 1) CCC_SetColorString(client, CCC_NameColor, colors[2][client]);
+	}
+	else if (IsClientConnected(client))
+	{
+		CreateTimer(10.0, Timer_Advertise, client);
+	}
 }
 
 public Action:mainmenu(client, args)
